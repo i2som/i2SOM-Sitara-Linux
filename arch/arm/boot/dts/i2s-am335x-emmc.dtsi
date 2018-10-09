@@ -1,0 +1,9 @@
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "am33xx.dtsi"
+#include "i2s-am335x.dtsi"
+#include "i2s-am335x_emmc.dtsi"
+
+/ {
+	model = "i2SOM i2S-AM335x";
+	compatible = "ti,i2s_am335x", "ti,am33xx";
+};
