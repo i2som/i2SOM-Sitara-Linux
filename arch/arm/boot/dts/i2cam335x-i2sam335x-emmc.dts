@@ -7,8 +7,8 @@
  */
 /dts-v1/;
 
-#include "i2s-am335x-nand.dtsi"
-#include "i2cam335x-i2sam335x-nand.dtsi"
+#include "i2s-am335x-emmc.dtsi"
+#include "i2cam335x-i2sam335x-emmc.dtsi"
 
 &uart0 {
 	status = "okay";
@@ -34,19 +34,21 @@
 	status = "okay";
 };
 
-&usb0 {
-	status = "okay";
-};
-
 &usb0_phy {
 	status = "okay";
 };
 
-&usb1 {
+&usb1_phy {
 	status = "okay";
 };
 
-&usb1_phy {
+&usb0 {
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&usb1 {
+	dr_mode = "host";
 	status = "okay";
 };
 
@@ -70,10 +72,6 @@
 	status = "okay";
 };
 
-&ehrpwm2 {
-	status = "okay";
-};
-
 &mcasp0 {
 	status = "disabled";
 };
@@ -84,6 +82,10 @@
 
 &davinci_mdio {
 	status = "okay";
+};
+
+&cpsw_emac0 {
+	dual_emac_res_vlan=<0>;
 };
 
 &tscadc {
@@ -100,6 +102,14 @@
 
 &aes {
 	status = "okay";
+};
+
+&wkup_m3_ipc {
+	ti,scale-data-fw = "am335x-evm-scale-data.bin";
+};
+
+&rtc {
+	system-power-controller;
 };
 
 &sgx {
