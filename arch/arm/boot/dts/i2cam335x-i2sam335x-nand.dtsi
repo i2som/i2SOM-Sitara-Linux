@@ -40,6 +40,9 @@
 
 	panel {
 		compatible = "ti,tilcdc,panel";
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&lcd_pins_default>;
+		pinctrl-1 = <&lcd_pins_sleep>;
 		status = "okay";
 
 		panel-info {
@@ -55,7 +58,8 @@
 		};
 
 		display-timings {
-			480x272 {
+			native-mode = <&timing1>;
+			timing0:480x272 {
 				clock-frequency = <9000000>;
 				hactive = <480>;
 				vactive = <272>;
@@ -67,6 +71,20 @@
 				vsync-len = <10>;
 				hsync-active = <0>;
 				vsync-active = <0>;
+			};
+
+			timing1: 800x480 {
+				clock-frequency = <30000000>;
+				hactive = <800>;
+				vactive = <480>;
+				hfront-porch = <39>;
+				hback-porch = <39>;
+				hsync-len = <47>;
+				vback-porch = <29>;
+				vfront-porch = <13>;
+				vsync-len = <2>;
+				hsync-active = <1>;
+				vsync-active = <1>;
 			};
 		};
 	};
@@ -331,6 +349,12 @@
 			0x16c (PIN_INPUT_PULLUP | MUX_MODE2) /* uart0_rtsn.d_can1_rx */
 		>;
 	};
+
+	edt_ft5306_ts_pins: edt_ft5306_ts_pins {
+		pinctrl-single,pins = <
+			0x1E8 (PIN_INPUT_PULLUP | MUX_MODE7)    /* EMU1.gpio3_8  TP_INT*/
+		>;
+	};
 };
 
 &uart0 {
@@ -355,6 +379,20 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pins>;
 	clock-frequency = <400000>;
+
+	edt-ft5306@38 {
+		compatible = "edt,edt-ft5306", "edt.edt-ft5x06";
+		pinctrl-names = "default";
+		pinctrl-0 = <&edt_ft5306_ts_pins>;
+		status = "okay";
+
+		reg = <0x38>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <8 0>;
+
+		touchscreen-size-x = <800>;
+		touchscreen-size-y = <480>;
+	};
 };
 
 &usb {
@@ -394,10 +432,6 @@
 };
 
 &lcdc {
-	pinctrl-names = "default", "sleep";
-	pinctrl-0 = <&lcd_pins_default>;
-	pinctrl-1 = <&lcd_pins_sleep>;
-	status = "disabled";
 };
 
 &epwmss2 {
@@ -473,8 +507,8 @@
 		ti,wires = <4>;
 		ti,x-plate-resistance = <200>;
 		ti,coordinate-readouts = <5>;
-		ti,wire-config = <0x00 0x11 0x22 0x33>;
-		ti,charge-delay = <0x400>;
+		ti,wire-config = <0x10 0x01 0x32 0x23>;
+		ti,charge-delay = <0x800>;
 	};
 
 	adc {
